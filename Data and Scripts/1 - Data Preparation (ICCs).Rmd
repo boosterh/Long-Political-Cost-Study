@@ -260,7 +260,7 @@ tab_model(INTEREST, EFF, file="INT_Table 4.doc")
 ```{r plotting}
 
 #plotting with multiplot -- might switch to ggplot for final mock-up. 
-INTENTLAG <- multiplot(VOTE, PROTEST, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Intent") 
+INTENTLAG <- multiplot(VOTE, PROTEST, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Intent", scales="fixed") 
 
 INTERESTLAG <- multiplot(INTEREST, EFF, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Interest and Efficacy") 
 
@@ -272,20 +272,19 @@ INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg", "EMP"),
 
 PART <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Participation") 
 
-
 figure1 <- ggarrange(INTENT, INTENTLAG,
 labels = c("A", "B"),
-ncol = 2, nrow = 1)
+ncol = 1, nrow = 2)
 ggsave("Figure1.png")
 
 figure2 <- ggarrange(INTEREST, INTERESTLAG,
 labels = c("A", "B"),
-ncol = 2, nrow = 1)
+ncol = 1, nrow = 2)
 ggsave("Figure2.png")
 
 figure3 <- ggarrange(PART, PARTLAG,
 labels = c("A", "B"),
-ncol = 2, nrow = 1)
+ncol = 1, nrow = 2)
 ggsave("Figure3.png")
 
 ```
