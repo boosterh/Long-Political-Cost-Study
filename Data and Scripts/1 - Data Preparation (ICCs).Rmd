@@ -107,7 +107,73 @@ DALL2$INCOME <- rec(DALL2$INCOME, rec = "9 = 4; else = copy")
 ```
 
 ```{r Reliability}
+ang1x <- DALL %>% select(c(PC3_1, PC4_1))
+reg1x <- DALL %>% select(c(PC5_1, PC6_1))
 
+ang2x <- DALL %>% select(c(PC3_2, PC4_2))
+reg2x <- DALL %>% select(c(PC5_2, PC6_2))
+
+ang3x <- DALL %>% select(c(PC3_3, PC4_3))
+reg3x <- DALL %>% select(c(PC5_3, PC6_3))
+
+ang4x <- DALL %>% select(c(PC3_4, PC4_4))
+reg4x <- DALL %>% select(c(PC5_4, PC6_4))
+
+EMP1x <- DALL %>% select(c(PB1_1, PB2_1))
+EMP2x <- DALL %>% select(c(PB1_2, PB2_2))
+EMP3x <- DALL %>% select(c(PB1_3, PB2_3))
+EMP4x <- DALL %>% select( c(PB1_4, PB2_4))
+
+STR1x <- DALL %>% select(c(PC1_1, PC2_1))
+STR2x <- DALL %>% select(c(PC1_2, PC2_2))
+STR3x <- DALL %>% select(c(PC1_3, PC2_3))
+STR4x <- DALL %>% select(c(PC1_4, PC2_4))
+
+SUP1x <- DALL %>% select(c(SUP1_1, SUP2_1))
+SUP2x <- DALL %>% select(c(SUP1_2, SUP2_2))
+SUP3x <- DALL %>% select(c(SUP1_3, SUP2_3))
+SUP4x <- DALL %>% select(c(SUP1_4, SUP2_4))
+
+NSUP1x <- DALL %>% select(c(NSUP1_1, NSUP2_1))
+NSUP2x <- DALL %>% select(c(NSUP1_2, NSUP2_2))
+NSUP3x <- DALL %>% select(c(NSUP1_3, NSUP2_3))
+NSUP4x <- DALL %>% select(c(NSUP1_4, NSUP2_4))
+
+EFF1x <- DALL %>% select(c(EFF1_1, EFF2_1))
+EFF2x <- DALL %>% select(c(EFF1_2, EFF2_2))
+EFF3x <- DALL %>% select(c(EFF1_3, EFF2_3))
+EFF4x <- DALL %>% select(c(EFF1_4, EFF2_4))
+
+
+cor(na.omit(ang1x)) 
+cor(na.omit(ang2x)) 
+cor(na.omit(ang3x)) 
+cor(na.omit(ang4x)) 
+
+cor(na.omit(reg1x)) 
+cor(na.omit(reg2x)) 
+cor(na.omit(reg3x)) 
+cor(na.omit(reg4x)) 
+
+cor(na.omit(STR1x))
+cor(na.omit(STR2x)) 
+cor(na.omit(STR3x)) 
+cor(na.omit(STR4x)) 
+
+cor(na.omit(EMP1x)) 
+cor(na.omit(EMP2x)) 
+cor(na.omit(EMP3x)) 
+cor(na.omit(EMP4x)) 
+
+cor(na.omit(SUP1x)) 
+cor(na.omit(SUP2x)) 
+cor(na.omit(SUP3x)) 
+cor(na.omit(SUP4x)) 
+
+cor(na.omit(NSUP1x)) 
+cor(na.omit(NSUP2x)) 
+cor(na.omit(NSUP3x)) 
+cor(na.omit(NSUP4x)) 
 
 ```
 
