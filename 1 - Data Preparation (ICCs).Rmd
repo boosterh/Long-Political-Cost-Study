@@ -1,0 +1,205 @@
+---
+title: "Political Emotions and Engagement ICCs"
+author: "Benjamin Oosterhoff"
+date: "1/6/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE, echo=FALSE}
+library(haven)
+library(sjlabelled)
+library(tidyverse)
+library(psych)
+library(performance)
+library(lme4)
+library(sjmisc)
+library(lmerTest)
+library(coefplot)
+
+DALL <- read_sav("LSM_TOTAL.sav")
+
+```
+
+```{r ICCS}
+
+#political emotions 
+
+p1w <- DALL %>% 
+           select (c(PC1_1, PC1_2, PC1_3, PC1_4, ID)) %>% #select the data we want to use per model
+           gather(TIME, PC1, 1:4) #transform wide to long format 
+
+fpc1 <- lmer(PC1 ~ 1 + (1 | ID), p1w)
+icc(fpc1)
+
+
+
+
+```
+
+```{r}
+ang1 <- c("PC3_1", "PC4_1")
+reg1 <- c("PC5_1", "PC6_1")
+
+ang2 <- c("PC3_2", "PC4_2")
+reg2 <- c("PC5_2", "PC6_2")
+
+ang3 <- c("PC3_3", "PC4_3")
+reg3 <- c("PC5_3", "PC6_3")
+
+ang4 <- c("PC3_4", "PC4_4")
+reg4 <- c("PC5_4", "PC6_4")
+
+EMP1 <- c("PB1_1", "PB2_1")
+EMP2 <- c("PB1_2", "PB2_2")
+EMP3 <- c("PB1_3", "PB2_3")
+EMP4 <- c("PB1_4", "PB2_4")
+
+STR1 <- c("PC1_1", "PC2_1")
+STR2 <- c("PC1_2", "PC2_2")
+STR3 <- c("PC1_3", "PC2_3")
+STR4 <- c("PC1_4", "PC2_4")
+
+SUP1 <- c("SUP1_1", "SUP2_1")
+SUP2 <- c("SUP1_2", "SUP2_2")
+SUP3 <- c("SUP1_3", "SUP2_3")
+SUP4 <- c("SUP1_4", "SUP2_4")
+
+NSUP1 <- c("NSUP1_1", "NSUP2_1")
+NSUP2 <- c("NSUP1_2", "NSUP2_2")
+NSUP3 <- c("NSUP1_3", "NSUP2_3")
+NSUP4 <- c("NSUP1_4", "NSUP2_4")
+
+EFF1 <- c("EFF1_1", "EFF2_1")
+EFF2 <- c("EFF1_2", "EFF2_2")
+EFF3 <- c("EFF1_3", "EFF2_3")
+EFF4 <- c("EFF1_4", "EFF2_4")
+
+DALL1 <- DALL %>% 
+       mutate(ang_1 = rowMeans(select(.,ang1)),
+              reg_1 = rowMeans(select(.,reg1)),
+              ang_2 = rowMeans(select(.,ang2)),
+              reg_2 = rowMeans(select(.,reg2)),
+              ang_3 = rowMeans(select(.,ang3)),
+              reg_3 = rowMeans(select(.,reg3)),
+              ang_4 = rowMeans(select(.,ang4)),
+              reg_4 = rowMeans(select(.,reg4)),
+              EMP_1 = rowMeans(select(.,EMP1)),
+              EMP_2 = rowMeans(select(.,EMP2)),
+              EMP_3 = rowMeans(select(.,EMP3)),
+              EMP_4 = rowMeans(select(.,EMP4)),
+              STR_1 = rowMeans(select(.,STR1)),
+              STR_2 = rowMeans(select(.,STR2)),
+              STR_3 = rowMeans(select(.,STR3)),
+              STR_4 = rowMeans(select(.,EMP4)),
+              SUP_1 = rowMeans(select(.,SUP1)),
+              SUP_2 = rowMeans(select(.,SUP2)),
+              SUP_3 = rowMeans(select(.,SUP3)),
+              SUP_4 = rowMeans(select(.,SUP4)),
+              NSUP_1 = rowMeans(select(.,NSUP1)),
+              NSUP_2 = rowMeans(select(.,NSUP2)),
+              NSUP_3 = rowMeans(select(.,NSUP3)),
+              NSUP_4 = rowMeans(select(.,NSUP4)),
+              EFFIC_1 = rowMeans(select(.,EFF1)),
+              EFFIC_2 = rowMeans(select(.,EFF2)),
+              EFFIC_3 = rowMeans(select(.,EFF3)),
+              EFFIC_4 = rowMeans(select(.,EFF4))
+              )
+
+
+DALL2 <- DALL1 %>%
+             select (c(STR_1, STR_2, STR_3, STR_4, ang_1, ang_2, ang_3, ang_4, reg_1, reg_2, reg_3, reg_4, EFF1_1, EFF1_2, EFF1_3, EFF1_4, INTEREST_1, INTEREST_2, INTEREST_3, INTEREST_4,PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, VOTE_1, VOTE_2, VOTE_3, VOTE_4,EMP_1, EMP_2, EMP_3, EMP_4, SUP_1, SUP_2, SUP_3, SUP_4,NSUP_1, NSUP_2, NSUP_3, NSUP_4, EFFIC_1, EFFIC_2, EFFIC_3, EFFIC_4, INCOME, GENDER, AGE, ID)) %>%              
+            gather(KEY, score, 1:44) %>%
+             separate(KEY, c("VAR", "TIME")) %>%
+             spread(VAR, score)
+
+DALL2$INTEREST <- rec(DALL2$INTEREST, rec = "10 = 6; else = copy")
+DALL2$INCOME <- rec(DALL2$INCOME, rec = "9 = 4; else = copy")
+
+
+VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+NSUP <- lmer(formula = NSUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+SUP <- lmer(formula = SUP ~ 1 + GENDER + AGE + INCOME + STR4 + ang + reg + EMP + (1 | ID), data= DALL2)
+
+INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+INTENT <- multiplot(VOTE, PROTEST, coefficients=c("PC1", "PC2", "ang", "reg", "EMP"))
+INTEREST <- multiplot(INTEREST, EFF, coefficients=c("PC1", "PC2", "ang", "reg",  "EMP"))
+PART <- multiplot(NSUP, SUP, coefficients=c("PC1", "PC2", "ang", "reg",  "EMP"))
+
+#lags
+library(DataCombine)
+
+x <- slide(DALL2, Var = "STR", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "STRlag")
+x <- slide(x, Var = "ang", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "anglag")
+x <- slide(x, Var = "reg", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "reglag")
+x <- slide(x, Var = "EMP", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "EMPlag")
+
+
+VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+
+PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+
+NSUP <- lmer(formula = NSUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+
+SUP <- lmer(formula = SUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+
+INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+
+EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+
+summary(INTEREST)
+
+INTENTLAG <- multiplot(VOTE, PROTEST, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"))
+INTERESTLAG <- multiplot(INTEREST, EFF, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"))
+PARTLAG <- multiplot(NSUP, SUP, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"))
+
+INTENT <- multiplot(VOTE, PROTEST, coefficients=c("STR", "ang", "reg", "EMP"))
+INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg",  "EMP"))
+PART <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg",  "EMP"))
+
+
+library(ggplot2)
+library(ggpubr)
+figure <- ggarrange(INTENTLAG,
+INTERESTLAG,
+PARTLAG,
+                    labels = c("A", "B", "C"),
+                    ncol = 2, nrow = 2)
+
+
+ggsave("figure.png")
+ggsave("figure2.png")
+
+
+figure2 <- ggarrange(INTENT,
+INTEREST,
+PART,
+                    labels = c("A", "B", "C"),
+                    ncol = 2, nrow = 2)
+
+figure2
+
+library(boot)
+source( "indirectMLM.R" )
+
+#### Analyses ####
+# Note: This will probably take a while to run! Be patient!
+mediated.mlm <- boot(data=DALL3, statistic=indirect.mlm, R=1000, strata=DALL3$ID, 
+                      y="EFF1", x="PC3", mediator="PB1", group.id="ID",
+                      between.m=T, uncentered.x=T )
+
+DALL3 <-  as.data.frame(DALL2)
+DALL2
+#### Print Output ####
+indirect.mlm.summary( mediated.mlm )
+
+DATA2
+
+```
+
