@@ -18,13 +18,14 @@ library(coefplot) #plotting
 library(DataCombine)# to create lagged variables 
 library(ggplot2) #plotting better
 library(ggpubr) #plotting better
+library(apaTables) #Tables dog 
 
-
-DALL <- read_sav("LSM_TOTAL.sav")
+DALL <- read_sav("LSM_TOTAL.sav")#read data
 
 ```
 
-```{r}
+```{r data manipulation}
+
 ang1 <- c("PC3_1", "PC4_1")
 reg1 <- c("PC5_1", "PC6_1")
 
@@ -94,26 +95,56 @@ DALL1 <- DALL %>%
               )
 
 DALL2 <- DALL1 %>%
-             select (c(STR_1, STR_2, STR_3, STR_4, ang_1, ang_2, ang_3, ang_4, reg_1, reg_2, reg_3, reg_4, EFF1_1, EFF1_2, EFF1_3, EFF1_4, INTEREST_1, INTEREST_2, INTEREST_3, INTEREST_4,PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, VOTE_1, VOTE_2, VOTE_3, VOTE_4,EMP_1, EMP_2, EMP_3, EMP_4, SUP_1, SUP_2, SUP_3, SUP_4,NSUP_1, NSUP_2, NSUP_3, NSUP_4, EFFIC_1, EFFIC_2, EFFIC_3, EFFIC_4, INCOME, GENDER, AGE, ID)) %>%              
-            gather(KEY, score, 1:44) %>%
+             select (c(STR_1, STR_2, STR_3, STR_4, ang_1, ang_2, ang_3, ang_4, reg_1, reg_2, reg_3, reg_4, INTEREST_1, INTEREST_2, INTEREST_3, INTEREST_4,PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, VOTE_1, VOTE_2, VOTE_3, VOTE_4,EMP_1, EMP_2, EMP_3, EMP_4, SUP_1, SUP_2, SUP_3, SUP_4,NSUP_1, NSUP_2, NSUP_3, NSUP_4, EFFIC_1, EFFIC_2, EFFIC_3, EFFIC_4, INCOME, GENDER, AGE, ID)) %>%      
+             gather(KEY, score, 1:40) %>%
              separate(KEY, c("VAR", "TIME")) %>%
              spread(VAR, score)
 
 DALL2$INTEREST <- rec(DALL2$INTEREST, rec = "10 = 6; else = copy")
 DALL2$INCOME <- rec(DALL2$INCOME, rec = "9 = 4; else = copy")
+
 ```
 
-```{r ICCS}
+```{r Reliability}
 
-#political emotions 
 
-p1w <- DALL %>% 
-           select (c(PC1_1, PC1_2, PC1_3, PC1_4, ID)) %>% #select the data we want to use per model
-           gather(TIME, PC1, 1:4) #transform wide to long format 
+```
 
-fpc1 <- lmer(PC1 ~ 1 + (1 | ID), p1w)
-icc(fpc1)
 
+
+```{r Descriptives and ICCS}
+#Descriptives 
+
+cor.table <- DALL2 %>% 
+             select(c(AGE, GENDER, INCOME, STR, ang, reg, EMP, INTEREST, EFFIC, PROTEST, VOTE, NSUP, SUP))
+
+apa.cor.table(cor.table, filename = "Table 1 (Long Political Costs).doc", table.number = 1,
+  show.conf.interval=FALSE, landscape = TRUE)
+
+#ICCS
+VOTE_ICC <- lmer(formula = VOTE ~ 1 + (1 | ID), data= DALL2)
+PROTEST_ICC <- lmer(formula = PROTEST ~ 1 + (1 | ID), data= DALL2)
+NSUP_ICC <- lmer(formula = NSUP ~ 1 + (1 | ID), data= DALL2)
+SUP_ICC <- lmer(formula = SUP ~ 1 + (1 | ID), data= DALL2)
+INTEREST_ICC <- lmer(formula = INTEREST ~ 1 + (1 | ID), data= DALL2)
+EFF_ICC <- lmer(formula = EFFIC ~ 1 + (1 | ID), data= DALL2)
+
+icc(VOTE_ICC)
+icc(PROTEST_ICC)
+icc(NSUP_ICC)
+icc(SUP_ICC)
+icc(INTEREST_ICC)
+icc(EFF_ICC)
+
+STR_ICC <- lmer(formula = STR ~ 1 + (1 | ID), data= DALL2)
+ang_ICC <- lmer(formula = ang ~ 1 + (1 | ID), data= DALL2)
+reg_ICC <- lmer(formula = reg ~ 1 + (1 | ID), data= DALL2)
+EMP_ICC <- lmer(formula = EMP ~ 1 + (1 | ID), data= DALL2)
+
+icc(STR_ICC)
+icc(ang_ICC)
+icc(reg_ICC)
+icc(EMP_ICC)
 
 ```
 
