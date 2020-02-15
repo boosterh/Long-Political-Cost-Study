@@ -110,8 +110,6 @@ DALL2$INCOME <- rec(DALL2$INCOME, rec = "9 = 4; else = copy")
 
 ```
 
-
-
 ```{r Descriptives and ICCS}
 #Descriptives 
 
@@ -148,24 +146,7 @@ icc(EMP_ICC)
 
 ```
 
-```{primary models}
-#primary models 
-VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-NSUP <- lmer(formula = NSUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-SUP <- lmer(formula = SUP ~ 1 + GENDER + AGE + INCOME + STR4 + ang + reg + EMP + (1 | ID), data= DALL2)
-
-INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-INTENT <- multiplot(VOTE, PROTEST, coefficients=c("PC1", "PC2", "ang", "reg", "EMP"))
-INTEREST <- multiplot(INTEREST, EFF, coefficients=c("PC1", "PC2", "ang", "reg",  "EMP"))
-PART <- multiplot(NSUP, SUP, coefficients=c("PC1", "PC2", "ang", "reg",  "EMP"))
-
+```{r primary models}
 #primary + lags - might just use these 
 #creare lags
 x <- slide(DALL2, Var = "STR", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "STRlag")
@@ -199,16 +180,40 @@ INTENT <- multiplot(VOTE, PROTEST, coefficients=c("STR", "ang", "reg", "EMP"))
 INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg",  "EMP"))
 PART <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg",  "EMP"))
 
+figure1 <- ggarrange(INTENT, INTENTLAG,
+labels = c("A", "B"),
+ncol = 2, nrow = 1)
+ggsave("figure1.png")
 
-figure <- ggarrange(INTENTLAG, INTERESTLAG, PARTLAG,
-labels = c("A", "B", "C"),
-ncol = 2, nrow = 2)
-
-figure2 <- ggarrange(INTENT, INTEREST, PART,
-labels = c("A", "B", "C"),
-ncol = 2, nrow = 2)
-
-ggsave("figure.png")
+figure2 <- ggarrange(INTEREST, INTERESTLAG,
+labels = c("A", "B"),
+ncol = 2, nrow = 1)
 ggsave("figure2.png")
 
+figure3 <- ggarrange(PART, PARTLAG,
+labels = c("A", "B"),
+ncol = 2, nrow = 1)
+ggsave("figure3.png")
+
+
+```
+
+```{R unused code}
+
+#primary models 
+VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+NSUP <- lmer(formula = NSUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+SUP <- lmer(formula = SUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
+
+INTENT <- multiplot(VOTE, PROTEST, coefficients=c("STR", "ang", "reg", "EMP"))
+INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg", "EMP"))
+PARTICIPATION <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg", "EMP"))
 ```
