@@ -1,38 +1,26 @@
 ---
-title: "Political Emotions and Engagement ICCs"
+title: "Longitudinal Associations Between Political Emotions and Engagement"
 author: "Benjamin Oosterhoff"
 date: "1/6/2020"
 output: html_document
 ---
 
 ```{r setup, include=FALSE, echo=FALSE}
-library(haven)
-library(sjlabelled)
-library(tidyverse)
-library(psych)
-library(performance)
-library(lme4)
-library(sjmisc)
-library(lmerTest)
-library(coefplot)
+library(haven) # read spss files
+library(sjlabelled) #get question labels 
+library(tidyverse) #data manipulation
+library(psych) #descriptives
+library(performance) #idk
+library(lme4) #fixed-effect regression models
+library(sjmisc) #idk
+library(lmerTest) #fixed-effect regression models p values
+library(coefplot) #plotting
+library(DataCombine)# to create lagged variables 
+library(ggplot2) #plotting better
+library(ggpubr) #plotting better
+
 
 DALL <- read_sav("LSM_TOTAL.sav")
-
-```
-
-```{r ICCS}
-
-#political emotions 
-
-p1w <- DALL %>% 
-           select (c(PC1_1, PC1_2, PC1_3, PC1_4, ID)) %>% #select the data we want to use per model
-           gather(TIME, PC1, 1:4) #transform wide to long format 
-
-fpc1 <- lmer(PC1 ~ 1 + (1 | ID), p1w)
-icc(fpc1)
-
-
-
 
 ```
 
@@ -105,7 +93,6 @@ DALL1 <- DALL %>%
               EFFIC_4 = rowMeans(select(.,EFF4))
               )
 
-
 DALL2 <- DALL1 %>%
              select (c(STR_1, STR_2, STR_3, STR_4, ang_1, ang_2, ang_3, ang_4, reg_1, reg_2, reg_3, reg_4, EFF1_1, EFF1_2, EFF1_3, EFF1_4, INTEREST_1, INTEREST_2, INTEREST_3, INTEREST_4,PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, VOTE_1, VOTE_2, VOTE_3, VOTE_4,EMP_1, EMP_2, EMP_3, EMP_4, SUP_1, SUP_2, SUP_3, SUP_4,NSUP_1, NSUP_2, NSUP_3, NSUP_4, EFFIC_1, EFFIC_2, EFFIC_3, EFFIC_4, INCOME, GENDER, AGE, ID)) %>%              
             gather(KEY, score, 1:44) %>%
@@ -114,8 +101,24 @@ DALL2 <- DALL1 %>%
 
 DALL2$INTEREST <- rec(DALL2$INTEREST, rec = "10 = 6; else = copy")
 DALL2$INCOME <- rec(DALL2$INCOME, rec = "9 = 4; else = copy")
+```
+
+```{r ICCS}
+
+#political emotions 
+
+p1w <- DALL %>% 
+           select (c(PC1_1, PC1_2, PC1_3, PC1_4, ID)) %>% #select the data we want to use per model
+           gather(TIME, PC1, 1:4) #transform wide to long format 
+
+fpc1 <- lmer(PC1 ~ 1 + (1 | ID), p1w)
+icc(fpc1)
 
 
+```
+
+```{primary models}
+#primary models 
 VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
 
 PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
@@ -132,15 +135,14 @@ INTENT <- multiplot(VOTE, PROTEST, coefficients=c("PC1", "PC2", "ang", "reg", "E
 INTEREST <- multiplot(INTEREST, EFF, coefficients=c("PC1", "PC2", "ang", "reg",  "EMP"))
 PART <- multiplot(NSUP, SUP, coefficients=c("PC1", "PC2", "ang", "reg",  "EMP"))
 
-#lags
-library(DataCombine)
-
+#primary + lags - might just use these 
+#creare lags
 x <- slide(DALL2, Var = "STR", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "STRlag")
 x <- slide(x, Var = "ang", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "anglag")
 x <- slide(x, Var = "reg", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "reglag")
 x <- slide(x, Var = "EMP", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "EMPlag")
 
-
+#models 
 VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
 PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
@@ -153,8 +155,11 @@ INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + re
 
 EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
-summary(INTEREST)
+```
 
+```{r plotting}
+
+#plotting with multiplot -- might switch to ggplot for final mock-up. 
 INTENTLAG <- multiplot(VOTE, PROTEST, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"))
 INTERESTLAG <- multiplot(INTEREST, EFF, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"))
 PARTLAG <- multiplot(NSUP, SUP, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"))
@@ -164,42 +169,15 @@ INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg",  "EMP")
 PART <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg",  "EMP"))
 
 
-library(ggplot2)
-library(ggpubr)
-figure <- ggarrange(INTENTLAG,
-INTERESTLAG,
-PARTLAG,
-                    labels = c("A", "B", "C"),
-                    ncol = 2, nrow = 2)
+figure <- ggarrange(INTENTLAG, INTERESTLAG, PARTLAG,
+labels = c("A", "B", "C"),
+ncol = 2, nrow = 2)
 
+figure2 <- ggarrange(INTENT, INTEREST, PART,
+labels = c("A", "B", "C"),
+ncol = 2, nrow = 2)
 
 ggsave("figure.png")
 ggsave("figure2.png")
 
-
-figure2 <- ggarrange(INTENT,
-INTEREST,
-PART,
-                    labels = c("A", "B", "C"),
-                    ncol = 2, nrow = 2)
-
-figure2
-
-library(boot)
-source( "indirectMLM.R" )
-
-#### Analyses ####
-# Note: This will probably take a while to run! Be patient!
-mediated.mlm <- boot(data=DALL3, statistic=indirect.mlm, R=1000, strata=DALL3$ID, 
-                      y="EFF1", x="PC3", mediator="PB1", group.id="ID",
-                      between.m=T, uncentered.x=T )
-
-DALL3 <-  as.data.frame(DALL2)
-DALL2
-#### Print Output ####
-indirect.mlm.summary( mediated.mlm )
-
-DATA2
-
 ```
-
