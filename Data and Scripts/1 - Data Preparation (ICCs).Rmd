@@ -177,6 +177,14 @@ cor(na.omit(NSUP4x))
 
 ```
 
+ANG r's range from .53 to .61 across measurement waves.
+REG r's range from .44 to .55 across measurement waves.
+STR r's range from .72 to .78 across measurement waves.
+EMP r's range from .71 to .82 across measurement waves.
+SUP r's range from .47 to .59 across measurement waves.
+NSUP r's range from .41 to .56 across measurement waves.
+
+
 ```{r Descriptives and ICCS}
 #Descriptives 
 
