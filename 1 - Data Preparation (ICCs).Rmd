@@ -18,7 +18,8 @@ library(coefplot) #plotting
 library(DataCombine)# to create lagged variables 
 library(ggplot2) #plotting better
 library(ggpubr) #plotting better
-library(apaTables) #Tables dog 
+library(apaTables) #Correlation Tables dog 
+library(sjPlot) #LMER Tables4
 
 DALL <- read_sav("LSM_TOTAL.sav")#read data
 
@@ -167,7 +168,18 @@ INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + re
 
 EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
+#this will make the LMER Table
+tab_model(VOTE, file="v_Table.doc")
+
 ```
+
+**INTENT**
+
+**ENGAGEMENT**
+
+**INTEREST AND EFFICACY**
+
+
 
 ```{r plotting}
 
@@ -194,7 +206,6 @@ figure3 <- ggarrange(PART, PARTLAG,
 labels = c("A", "B"),
 ncol = 2, nrow = 1)
 ggsave("figure3.png")
-
 
 ```
 
