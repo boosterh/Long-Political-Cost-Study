@@ -259,18 +259,30 @@ tab_model(INTEREST, EFF, file="INT_Table 4.doc")
 
 ```{r plotting}
 
-#plotting with multiplot -- might switch to ggplot for final mock-up. 
+#plotting with multiplot 
 INTENTLAG <- multiplot(VOTE, PROTEST, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Intent", scales="fixed") 
+
+INTENTLAG <- INTENTLAG + xlim(-.15, .30) 
 
 INTERESTLAG <- multiplot(INTEREST, EFF, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Interest and Efficacy") 
 
+INTERESTLAG <-  INTERESTLAG + xlim(-.15, .30) 
+
 PARTLAG <- multiplot(NSUP, SUP, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Participation") 
+
+PARTLAG <-  PARTLAG + xlim(-.15, .30) 
 
 INTENT <- multiplot(VOTE, PROTEST, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Intent") 
 
+INTENT <- INTENT + xlim(-.15, .30) 
+
 INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Interest and Efficacy") 
 
+INTEREST <- INTEREST + xlim(-.15, .30) 
+
 PART <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Participation") 
+
+PART <- PART + xlim(-.15, .30) 
 
 figure1 <- ggarrange(INTENT, INTENTLAG,
 labels = c("A", "B"),
@@ -289,22 +301,3 @@ ggsave("Figure3.png")
 
 ```
 
-```{R unused code}
-
-#primary models 
-VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-NSUP <- lmer(formula = NSUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-SUP <- lmer(formula = SUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + (1 | ID), data= DALL2)
-
-INTENT <- multiplot(VOTE, PROTEST, coefficients=c("STR", "ang", "reg", "EMP"))
-INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg", "EMP"))
-PARTICIPATION <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg", "EMP"))
-```
