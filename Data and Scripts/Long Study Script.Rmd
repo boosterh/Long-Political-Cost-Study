@@ -59,13 +59,13 @@ NSUP2 <- c("NSUP1_2", "NSUP2_2")
 NSUP3 <- c("NSUP1_3", "NSUP2_3")
 NSUP4 <- c("NSUP1_4", "NSUP2_4")
 
-EFF1 <- c("EFF1_1", "EFF2_1")
-EFF2 <- c("EFF1_2", "EFF2_2")
-EFF3 <- c("EFF1_3", "EFF2_3")
-EFF4 <- c("EFF1_4", "EFF2_4")
-
 DALL1 <- DALL %>% 
-       mutate(ang_1 = rowMeans(select(.,ang1)),
+       mutate(EFF2_1R = 8 - EFF2_1,
+              EFF2_2R = 8 - EFF2_2,
+              EFF2_3R = 8 - EFF2_3,
+              EFF2_4R = 8 - EFF2_4) %>%
+       mutate(   
+         ang_1 = rowMeans(select(.,ang1)),
               reg_1 = rowMeans(select(.,reg1)),
               ang_2 = rowMeans(select(.,ang2)),
               reg_2 = rowMeans(select(.,reg2)),
@@ -88,15 +88,11 @@ DALL1 <- DALL %>%
               NSUP_1 = rowMeans(select(.,NSUP1)),
               NSUP_2 = rowMeans(select(.,NSUP2)),
               NSUP_3 = rowMeans(select(.,NSUP3)),
-              NSUP_4 = rowMeans(select(.,NSUP4)),
-              EFFIC_1 = rowMeans(select(.,EFF1)),
-              EFFIC_2 = rowMeans(select(.,EFF2)),
-              EFFIC_3 = rowMeans(select(.,EFF3)),
-              EFFIC_4 = rowMeans(select(.,EFF4))
+              NSUP_4 = rowMeans(select(.,NSUP4))
               )
 
 DALL2 <- DALL1 %>%
-             select (c(STR_1, STR_2, STR_3, STR_4, ang_1, ang_2, ang_3, ang_4, reg_1, reg_2, reg_3, reg_4, INTEREST_1, INTEREST_2, INTEREST_3, INTEREST_4,PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, VOTE_1, VOTE_2, VOTE_3, VOTE_4,EMP_1, EMP_2, EMP_3, EMP_4, SUP_1, SUP_2, SUP_3, SUP_4,NSUP_1, NSUP_2, NSUP_3, NSUP_4, EFFIC_1, EFFIC_2, EFFIC_3, EFFIC_4, INCOME, GENDER, AGE, ID)) %>%      
+             select (c(STR_1, STR_2, STR_3, STR_4, ang_1, ang_2, ang_3, ang_4, reg_1, reg_2, reg_3, reg_4, INTEREST_1, INTEREST_2, INTEREST_3, INTEREST_4,PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, PROTEST_1, PROTEST_2, PROTEST_3, PROTEST_4, VOTE_1, VOTE_2, VOTE_3, VOTE_4,EMP_1, EMP_2, EMP_3, EMP_4, SUP_1, SUP_2, SUP_3, SUP_4,NSUP_1, NSUP_2, NSUP_3, NSUP_4, EFF1_1, EFF1_2, EFF1_3, EFF1_4, INCOME, GENDER, AGE, RWH, ID)) %>%      
              gather(KEY, score, 1:40) %>%
              separate(KEY, c("VAR", "TIME")) %>%
              spread(VAR, score)
@@ -139,57 +135,44 @@ NSUP2x <- DALL %>% select(c(NSUP1_2, NSUP2_2))
 NSUP3x <- DALL %>% select(c(NSUP1_3, NSUP2_3))
 NSUP4x <- DALL %>% select(c(NSUP1_4, NSUP2_4))
 
-EFF1x <- DALL %>% select(c(EFF1_1, EFF2_1))
-EFF2x <- DALL %>% select(c(EFF1_2, EFF2_2))
-EFF3x <- DALL %>% select(c(EFF1_3, EFF2_3))
-EFF4x <- DALL %>% select(c(EFF1_4, EFF2_4))
+alpha(ang1x) #.75
+alpha(ang2x) #.77
+alpha(ang3x) #.70
+alpha(ang4x) #.74
 
+alpha(reg1x) #.69
+alpha(reg2x) #.63
+alpha(reg3x) #.62
+alpha(reg4x) #.71
 
-cor(na.omit(ang1x)) 
-cor(na.omit(ang2x)) 
-cor(na.omit(ang3x)) 
-cor(na.omit(ang4x)) 
+alpha(STR1x) #.86
+alpha(STR2x) #.83
+alpha(STR3x) #.83
+alpha(STR4x) #.88
 
-cor(na.omit(reg1x)) 
-cor(na.omit(reg2x)) 
-cor(na.omit(reg3x)) 
-cor(na.omit(reg4x)) 
+alpha(EMP1x) #.85
+alpha(EMP2x) #.83
+alpha(EMP3x) #.88
+alpha(EMP4x) #.91
 
-cor(na.omit(STR1x))
-cor(na.omit(STR2x)) 
-cor(na.omit(STR3x)) 
-cor(na.omit(STR4x)) 
+alpha(SUP1x) #.74
+alpha(SUP2x) #.63
+alpha(SUP3x) #.68
+alpha(SUP4x) #.65
 
-cor(na.omit(EMP1x)) 
-cor(na.omit(EMP2x)) 
-cor(na.omit(EMP3x)) 
-cor(na.omit(EMP4x)) 
+alpha(NSUP1x) #.72
+alpha(NSUP2x) #.60
+alpha(NSUP3x) #.71
+alpha(NSUP4x) #.72
 
-cor(na.omit(SUP1x)) 
-cor(na.omit(SUP2x)) 
-cor(na.omit(SUP3x)) 
-cor(na.omit(SUP4x)) 
-
-cor(na.omit(NSUP1x)) 
-cor(na.omit(NSUP2x)) 
-cor(na.omit(NSUP3x)) 
-cor(na.omit(NSUP4x)) 
 
 ```
-
-ANG r's range from .53 to .61 across measurement waves.
-REG r's range from .44 to .55 across measurement waves.
-STR r's range from .72 to .78 across measurement waves.
-EMP r's range from .71 to .82 across measurement waves.
-SUP r's range from .47 to .59 across measurement waves.
-NSUP r's range from .41 to .56 across measurement waves.
-
 
 ```{r Descriptives and ICCS}
 #Descriptives 
 
 cor.table <- DALL2 %>% 
-             select(c(AGE, GENDER, INCOME, STR, ang, reg, EMP, INTEREST, EFFIC, PROTEST, VOTE, NSUP, SUP))
+             select(c(AGE, GENDER, RWH, INCOME, STR, ang, reg, EMP, INTEREST, EFF1, PROTEST, VOTE, NSUP, SUP))
 
 apa.cor.table(cor.table, filename = "Table 1 (Long Political Costs).doc", table.number = 1,
   show.conf.interval=FALSE, landscape = TRUE)
@@ -200,7 +183,7 @@ PROTEST_ICC <- lmer(formula = PROTEST ~ 1 + (1 | ID), data= DALL2)
 NSUP_ICC <- lmer(formula = NSUP ~ 1 + (1 | ID), data= DALL2)
 SUP_ICC <- lmer(formula = SUP ~ 1 + (1 | ID), data= DALL2)
 INTEREST_ICC <- lmer(formula = INTEREST ~ 1 + (1 | ID), data= DALL2)
-EFF_ICC <- lmer(formula = EFFIC ~ 1 + (1 | ID), data= DALL2)
+EFF_ICC <- lmer(formula = EFF1 ~ 1 + (1 | ID), data= DALL2)
 
 icc(VOTE_ICC)
 icc(PROTEST_ICC)
@@ -230,59 +213,56 @@ x <- slide(x, Var = "reg", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVa
 x <- slide(x, Var = "EMP", slideBy = -1,  GroupVar = "ID", TimeVar="TIME", NewVar = "EMPlag")
 
 #models 
-VOTE <- lmer(formula = VOTE ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+Vote <- lmer(formula = VOTE ~ 1 + GENDER + AGE + RWH + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
-PROTEST <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+Protest <- lmer(formula = PROTEST ~ 1 + GENDER + AGE + RWH + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
-NSUP <- lmer(formula = NSUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+Belief.Inconsistent <- lmer(formula = NSUP ~ 1 + GENDER + AGE + RWH + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
-SUP <- lmer(formula = SUP ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+Belief.Consistent <- lmer(formula = SUP ~ 1 + GENDER + AGE + RWH + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+summary(Belief.Consistent)
 
-INTEREST <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+Interest <- lmer(formula = INTEREST ~ 1 + GENDER + AGE + RWH + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
-EFF <- lmer(formula = EFFIC ~ 1 + GENDER + AGE + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
+Efficacy <- lmer(formula = EFF1 ~ 1 + GENDER + AGE + RWH + INCOME + STR + ang + reg + EMP + STRlag + anglag + reglag + EMPlag + (1 | ID), data= x)
 
 #this will make the LMER Table
-tab_model(VOTE, PROTEST, file="INTENT_Table 2.doc")
-tab_model(NSUP, SUP, file="ENGAGE_Table 3.doc")
-tab_model(INTEREST, EFF, file="INT_Table 4.doc")
+tab_model(Vote, Protest, file="INTENT_Table 2.doc")
+tab_model(Belief.Inconsistent, Belief.Consistent, file="ENGAGE_Table 3.doc")
+tab_model(Interest, Efficacy, file="INT_Table 4.doc")
 
 ```
 
-**INTENT**
-
-**ENGAGEMENT**
-
-**INTEREST AND EFFICACY**
-
-
-
 ```{r plotting}
 
+#two decimal function 
+scaleFUN <- function(x) sprintf("%.2f", x)
+
 #plotting with multiplot 
-INTENTLAG <- multiplot(VOTE, PROTEST, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Intent", scales="fixed") 
+INTENTLAG <- multiplot(Vote, Protest, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Political Intent", scales="fixed") 
 
-INTENTLAG <- INTENTLAG + xlim(-.15, .30) 
+INTENTLAG <- INTENTLAG + scale_x_continuous(limits = c(-.15, .35), labels=scaleFUN)
 
-INTERESTLAG <- multiplot(INTEREST, EFF, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Interest and Efficacy") 
+INTERESTLAG <- multiplot(Interest, Efficacy, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Political Interest and Efficacy") 
 
-INTERESTLAG <-  INTERESTLAG + xlim(-.15, .30) 
+INTERESTLAG <-  INTERESTLAG + scale_x_continuous(limits = c(-.15, .35), labels=scaleFUN) 
 
-PARTLAG <- multiplot(NSUP, SUP, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Participation") 
+PARTLAG <- multiplot(Belief.Inconsistent, Belief.Consistent, coefficients=c("STRlag", "anglag", "reglag", "EMPlag"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STRlag = "Stress Lag", anglag = "Anger Lag", reglag = "Regret Lag", EMPlag = "Empowerment Lag"), title = "Lagged Effects of Political Emotions on Political Interactions") 
 
-PARTLAG <-  PARTLAG + xlim(-.15, .30) 
+PARTLAG <-  PARTLAG + scale_x_continuous(limits = c(-.15, .35), labels=scaleFUN)
 
-INTENT <- multiplot(VOTE, PROTEST, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Intent") 
 
-INTENT <- INTENT + xlim(-.15, .30) 
+INTENT <- multiplot(Vote, Protest, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Political Intent") 
 
-INTEREST <- multiplot(INTEREST, EFF, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Interest and Efficacy") 
+INTENT <- INTENT + scale_x_continuous(limits = c(-.15, .35), labels=scaleFUN)
 
-INTEREST <- INTEREST + xlim(-.15, .30) 
+INTEREST <- multiplot(Interest, Efficacy, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Political Interest and Efficacy") 
 
-PART <- multiplot(NSUP, SUP, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Participation") 
+INTEREST <- INTEREST + scale_x_continuous(limits = c(-.15, .35), labels=scaleFUN)
 
-PART <- PART + xlim(-.15, .30) 
+PART <- multiplot(Belief.Inconsistent, Belief.Consistent, coefficients=c("STR", "ang", "reg", "EMP"), xlab="Estimate", ylab="Political Emotions", outerCI = 0, lwdInner=1, pointSize = 3, zeroColor="black", newNames=c(STR = "Stress", ang = "Anger", reg = "Regret", EMP = "Empowerment"), title = "Same-Moment Effects of Political Emotions on Political Interactions") 
+
+PART <- PART + scale_x_continuous(limits = c(-.15, .35), labels=scaleFUN)
 
 figure1 <- ggarrange(INTENT, INTENTLAG,
 labels = c("A", "B"),
